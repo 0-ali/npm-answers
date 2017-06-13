@@ -1,6 +1,6 @@
 {
   "name": "answers-bot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Solve questions and answers from the community",
   "main": "index.js",
   "scripts": {
