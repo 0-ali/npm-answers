@@ -55,7 +55,7 @@
                 uri: o.link,
                 transform: function (body) {
                     var $ = cheerio.load(body);
-                    deepExtend(o, {answer: $(selectors[0]).text(), votes: $(selectors[1]).text()});
+                    deepExtend(o, {answer: $(selectors[0]).text().trim(), votes: $(selectors[1]).text().trim()});
                     return o;
                 }
             })
