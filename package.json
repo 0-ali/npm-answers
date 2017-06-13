@@ -1,0 +1,26 @@
+{
+  "name": "answers-bot",
+  "version": "1.1.0",
+  "description": "Solve questions and answers from the community",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "answers",
+    "bot",
+    "wiki-how"
+  ],
+  "author": "Mohammed Ali <x.c0d3rz000@gmail.com> (x.c0d3rz000@gmail.com)",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xc0d3rz/npm-answers.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.4.1",
+    "cheerio": "^1.0.0-rc.1",
+    "deep-extend": "^0.5.0",
+    "request": "^2.81.0"
+  }
+}
