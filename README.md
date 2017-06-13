@@ -3,7 +3,7 @@
 
 ----------
 
-[![npm package](https://nodei.co/npm/answers-bot.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/request/)
+[![npm package](https://nodei.co/npm/answers-bot.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/answers-bot/)
 
 
 ### Installation
