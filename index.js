@@ -6,7 +6,6 @@
 (function () {
     var request = require('request'),
         cheerio = require('cheerio'),
-        async = require('async'),
         deepExtend = require('deep-extend');
 
     var answers = function () {
@@ -29,7 +28,7 @@
         qs = (typeof qs != 'object' ? qs = {} : (!'limit' in qs) ? qs.limit = 6 : qs);
         if ('q' in qs) {
             request({url: this.url, qs: {search_string: qs.q, limit: qs.limit}, json: true}, function (a, b, c) {
-                _this.parser.apply(_this, [a, b, c, cb]);
+                _this.parser(a, b, c, cb);
             });
         }
     };
@@ -44,18 +43,32 @@
 
     /**
      *
-     * @param url
+     * @param o
      * @param cb
      */
-    answers.prototype.document = function (url, cb) {
-        var selectors = ['.answer_text', '.confidence_num'],
-            _this = this;
-        request({url: url}, function (err, res, body) {
-            if (err) _this.error(err);
-            var $ = cheerio.load(body);
-            cb && cb({answer: $(selectors[0]).text(), votes: $(selectors[1]).text()});
-        });
+    answers.prototype.document = function (o, cb) {
+        var rp = require('request-promise'),
+            selectors = ['.answer_text', '.confidence_num'],
+            _this = answers.prototype;
+        if (o.is_answered) {
+            rp({
+                uri: o.link,
+                transform: function (body) {
+                    var $ = cheerio.load(body);
+                    deepExtend(o, {answer: $(selectors[0]).text(), votes: $(selectors[1]).text()});
+                    return o;
+                }
+            })
+                .then(function (r) {
+                    cb(r);
+                })
+                .catch(function (err) {
+                    _this.error(err);
+                })
+        }
     };
+
+    answers.prototype.result = [];
 
     /**
      *
@@ -65,17 +78,22 @@
      * @param cb
      */
     answers.prototype.parser = function (err, res, body, cb) {
-        var arr = [];
+        var
+            arr = [],
+            ire = 0;
         if (err) this.error(err);
-        async.map(body, function (r, c) {
-            if (r.is_answered) {
-                answers.prototype.document(r.link, function (rr) {
-                    deepExtend(r, rr);
-                    arr.push(r);
-                    c(arr);
-                });
-            }
-        }, cb);
+        for (var r in body) {
+            this.document(body[r], function (res) {
+                arr.push(res);
+                ire++;
+                if (ire == body.length) {
+                    cb(arr);
+                }
+            });
+
+
+        }
+
     };
 
     module.exports = answers;
