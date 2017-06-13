@@ -48,14 +48,21 @@
      */
     answers.prototype.document = function (o, cb) {
         var rp = require('request-promise'),
-            selectors = ['.answer_text', '.confidence_num'],
+            selectors = ['.answer_text', '.confidence_num', '.user_info_text_node.username'],
             _this = answers.prototype;
         if (o.is_answered) {
             rp({
                 uri: o.link,
                 transform: function (body) {
                     var $ = cheerio.load(body);
-                    deepExtend(o, {answer: $(selectors[0]).text().trim(), votes: $(selectors[1]).text().trim()});
+                    deepExtend(o, {
+                        answer: $(selectors[0]).text().trim(),
+                        votes: $(selectors[1]).text().trim(),
+                        userInfo: {
+                            name: $($(selectors[2]).children('a')[0]).text(),
+                            url: $($(selectors[2]).children('a')[0]).attr('href')
+                        }
+                    });
                     return o;
                 }
             })
